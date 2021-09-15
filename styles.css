@@ -1,0 +1,109 @@
+:root {
+    --primary-background: #FFFFFF;
+    --secondary-background: #F4F2E9;
+    --primary-button: rgb(244, 242, 233);
+    --primary-button-border:rgb(56, 33, 16);
+    --primary-text: #6c757d;
+    --secondary-text: #00635D;
+
+    --board-border: 15px solid var(--primary-text);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #b8bfc3;
+    background-image: linear-gradient(315deg, #b8bfc3 0%, #e2ebf0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Luckiest Guy', sans-serif;
+    color: var(--primary-text);
+    margin: 0;
+    min-height: 100vh;
+}
+
+.board-container {
+    margin-top: -100px;
+    height: 600px;
+    width: 600px;
+    background-color: #b8bfc3;
+    box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
+    overflow: hidden;
+    border-radius: 10%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    max-width: 100%;
+}
+
+.board-spots {
+   background-color: transparent;
+   box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
+   overflow: hidden;
+   border-radius: 15%;
+}
+
+#s-0 {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#s-1 {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#s-2 {
+    border-bottom: var(--board-border);
+}
+
+#s-3 {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#s-4 {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#s-5 {
+    border-bottom: var(--board-border);
+}
+
+#s-6 {
+    border-right: var(--board-border);
+}
+
+#s-7 {
+    border-right: var(--board-border);
+}
+
+#s-8 {
+
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    font-size: 22px;
+}
+
+.fa-github {
+    color: var(--primary-text);
+    font-size: 40px;
+    transition: transform 0.1s ease-in-out;
+}
+
+.fa-github:hover {
+    transform: scale(1.2);
+}
