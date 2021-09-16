@@ -1,9 +1,9 @@
 :root {
-    --primary-background: #FFFFFF;
+    --primary-background: #949b9e;
     --secondary-background: #F4F2E9;
     --primary-button: rgb(244, 242, 233);
     --primary-button-border:rgb(56, 33, 16);
-    --primary-text: #6c757d;
+    --primary-text: #4c5257;
     --secondary-text: #00635D;
 
     --board-border: 15px solid var(--primary-text);
@@ -14,8 +14,8 @@
 }
 
 body {
-    background-color: #b8bfc3;
-    background-image: linear-gradient(315deg, #b8bfc3 0%, #e2ebf0 100%);
+    background-color: var(--primary-background);
+    background-image: linear-gradient(315deg, #949b9e 0%, #e2ebf0 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,8 +29,7 @@ body {
     margin-top: -100px;
     height: 600px;
     width: 600px;
-    background-color: #b8bfc3;
-    box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
+    background-color: transparent;
     overflow: hidden;
     border-radius: 10%;
     display: grid;
@@ -41,10 +40,21 @@ body {
 
 .board-spots {
    background-color: transparent;
-   box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
    overflow: hidden;
    border-radius: 15%;
+   cursor: pointer;
+   color: #6e0f20b0;
+   text-align: center;
+   vertical-align: middle;
+   line-height: 172px;
+   font-family: Arial, sans-serif;
+   font-weight: bold;
+   font-size: 150px;
 }
+
+.board-spots:hover {
+    background-color: #a5b1b8;
+}   
 
 #s-0 {
     border-right: var(--board-border);
@@ -52,38 +62,46 @@ body {
 }
 
 #s-1 {
+    border-left: var(--board-border);
     border-right: var(--board-border);
     border-bottom: var(--board-border);
 }
 
 #s-2 {
+    border-left: var(--board-border);
     border-bottom: var(--board-border);
 }
 
 #s-3 {
+    border-top: var(--board-border);
     border-right: var(--board-border);
     border-bottom: var(--board-border);
 }
 
 #s-4 {
-    border-right: var(--board-border);
-    border-bottom: var(--board-border);
+    border: var(--board-border);
 }
 
 #s-5 {
+    border-top: var(--board-border);
+    border-left: var(--board-border);
     border-bottom: var(--board-border);
 }
 
 #s-6 {
+    border-top: var(--board-border);
     border-right: var(--board-border);
 }
 
 #s-7 {
+    border-top: var(--board-border);
+    border-left: var(--board-border);
     border-right: var(--board-border);
 }
 
 #s-8 {
-
+    border-top: var(--board-border);
+    border-left: var(--board-border);
 }
 
 .footer {
