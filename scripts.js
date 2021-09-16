@@ -1,7 +1,12 @@
 const ticTacToe = (() => {
+    const mainContainer = document.querySelector('.main-container'); // main container for all dynamic elements
+    const turnContainer = document.createElement('div');
+
     const gameBoard = (() => { // gameboard module
             const startingBoard = [null, null, null, null, null, null, null, null, null]; // empty board
             let currentBoard; // board to be updated through the game
+
+
 
             const renderNewBoard = () => { // new game
                 currentBoard = startingBoard.slice(0);
@@ -23,7 +28,6 @@ const ticTacToe = (() => {
                     spot.setAttribute('id', `s-${i}`);
                     boardContainer.appendChild(spot);
                     spot.textContent = currentBoard[i];
-                    console.log(spot.textContent);
                     if (spot.textContent === '') { // add listeners if space is empty
                         spot.addEventListener('click', _markSpot);
                     }
@@ -38,11 +42,68 @@ const ticTacToe = (() => {
                 const newSpot = spotId.substr(2);
                 currentBoard[newSpot] = playGame.getCurrentTurn();
                 _renderBoard();
+                _checkWinner();
             }
+
+            const _checkWinner = () => {
+                let isWinner = false;
+                let winner;
+
+                for (let i=0; i<10; i+=3) { // check rows
+                    if ((currentBoard[i] === 'X') && (currentBoard[i+1] === 'X') && (currentBoard[i+2] === 'X')) {
+                        isWinner = true;
+                        winner = 'X';
+                    }
+                    if ((currentBoard[i] === 'O') && (currentBoard[i+1] === 'O') && (currentBoard[i+2] === 'O')) {
+                        isWinner = true;
+                        winner = 'O';
+                    }
+                }
+
+                for (let i=0; i<3; i+=1) { // check columns
+                    if ((currentBoard[i] === 'X') && (currentBoard[i+3] === 'X') && (currentBoard[i+6] === 'X')) {
+                        isWinner = true;
+                        winner = 'X';
+                    }
+                    if ((currentBoard[i] === 'O') && (currentBoard[i+3] === 'O') && (currentBoard[i+6] === 'O')) {
+                        isWinner = true;
+                        winner = 'O';
+                    }
+                }
+
+                // check diagonals
+                if ((currentBoard[0] === 'X') && (currentBoard[4] === 'X') && (currentBoard[8] === 'X')) {
+                    isWinner = true;
+                    winner = 'X';
+                }
+                if ((currentBoard[0] === 'O') && (currentBoard[4] === 'O') && (currentBoard[8] === 'O')) {
+                    isWinner = true;
+                    winner = 'O';
+                }
+                if ((currentBoard[2] === 'X') && (currentBoard[4] === 'X') && (currentBoard[6] === 'X')) {
+                    isWinner = true;
+                    winner = 'X';
+                }
+                if ((currentBoard[2] === 'O') && (currentBoard[4] === 'O') && (currentBoard[6] === 'O')) {
+                    isWinner = true;
+                    winner = 'O';
+                }
+                
+
+                if (isWinner === true) {
+                    playGame.endGame(winner);
+                }
+
+                if (!currentBoard.includes(null)) {
+                    winner = 'tie';
+                    playGame.endGame(winner);
+                }   
+            }
+
             return {
                 renderNewBoard,
             }
-        })();
+    })();
 
     const playGame = (() => { // game mechanics module
         const players = []; // array to hold players
@@ -60,108 +121,149 @@ const ticTacToe = (() => {
             const player1 = Player(name1, 'X');
             const player2 = Player(name2, 'O');
             players.push(player1, player2);
-            gameBoard.renderNewBoard(); 
+            currentTurn = _getFirstTurn(players);
+            gameBoard.renderNewBoard();
+            _displayTurn(currentTurn); 
         }
         
-        const getCurrentTurn = () => { // if first turn, pick randomly if not first turn switch
-            if (totalMoves < 1) {
-                currentTurn = _getFirstTurn(players);
+        const getCurrentTurn = () => { // switch turn
+            if (currentTurn === players[0]) {
+                currentTurn = players[1];
             }
             else {
-                if (currentTurn === players[0].getLetter()) {
-                    currentTurn = players[1].getLetter();
-                }
-                else {
-                    currentTurn = players[0].getLetter();
-                }
+                currentTurn = players[0];
             }
 
             totalMoves++;
-            return currentTurn;
+            _displayTurn(currentTurn.getName());
+            return currentTurn.getLetter();
         }
-        const _getFirstTurn = (players) => {
-            let firstTurn = (Math.random() < .5 ? players[0] : players[1]).getLetter();
-            return firstTurn;
+
+        const endGame = (letter) => { // end game and announce winner
+            let winner;
+            mainContainer.textContent = '';
+
+            const winnerText = document.createElement('h2');
+            winnerText.classList.add('winner-text');
+
+            const playAgainBtn = document.createElement('button');
+            playAgainBtn.textContent = 'Play Again?'
+            playAgainBtn.addEventListener('click', init.initIntro);
+
+            mainContainer.appendChild(winnerText);
+            mainContainer.appendChild(playAgainBtn);
+
+
+            if (letter === 'X') {
+                winner = players[0].getName();
+            }
+            else if (letter === 'O') {
+                winner = players[1].getName();
+            }
+            else {
+                winner = "It's a tie!"
+            }
+
+            if (winner != "It's a tie!") {
+                winnerText.textContent = `${winner} wins!`;
+            }
+            else {
+                winnerText.textContent = winner;
+            }
+            
+
         }
+
+        const _getFirstTurn = (players) => { // random picker
+            let firstTurn = (Math.random() < .5 ? players[0] : players[1]);
+            return firstTurn.getName();
+        }
+
+        const _displayTurn = (currentTurn) => { // display current player's turn
+            turnContainer.textContent = '';
+            const turnText = document.createElement('h2');
+            turnText.classList.add('turn-text');
+            turnText.textContent = `${currentTurn}'s turn`;
+            turnContainer.appendChild(turnText);
+            mainContainer.appendChild(turnContainer);
+        }
+
+
 
         return {
             startGameHuman,
-            getCurrentTurn
+            getCurrentTurn,
+            endGame
         };
     })();
 
-    return {
-        gameBoard,
-        playGame,
-    };
-})();
-    
-const mainContainer = document.querySelector('.main-container'); // main container for all dynamic elements
-
-const init = (() => {
-    const initIntro = () => {
-        const intro = document.createElement('h1');
-            intro.classList.add('intro');
-            intro.textContent = 'Tic Tac Toe';
-            mainContainer.appendChild(intro);
-
-            const humanBtn = document.createElement('button');
-            humanBtn.setAttribute('id', 'human');
-            humanBtn.classList.add('game-button');
-            humanBtn.textContent = 'Play Vs Human';
-            humanBtn.addEventListener('click', chooseMode)
-            mainContainer.appendChild(humanBtn);
-            
-            const aiBtn = document.createElement('button');
-            aiBtn.classList.add('game-button');
-            aiBtn.textContent = 'Play Vs Ai!';
-            mainContainer.appendChild(aiBtn);
-    }    
-    const humanInputs = () => { // - Input fields for player object names
+    const init = (() => {
+        const initIntro = () => {
             mainContainer.textContent = '';
-            
-            const nameContainer = document.createElement('div');
-            nameContainer.classList.add('name-container');
-            const nameInput1 = document.createElement('input');
-            const nameInput2 = document.createElement('input');
-            const startBtn = document.createElement('button');
-            startBtn.textContent = 'Play Game!';
-            mainContainer.appendChild(nameContainer);
-            nameContainer.appendChild(nameInput1);
-            nameContainer.appendChild(nameInput2);
-            nameContainer.appendChild(startBtn);
+            const intro = document.createElement('h1');
+                intro.classList.add('intro');
+                intro.textContent = 'Tic Tac Toe';
+                mainContainer.appendChild(intro);
 
-            startBtn.addEventListener('click', () => {
-                const nameInput1Value = nameInput1.value;
-                const nameInput2Value = nameInput2.value;
+                const humanBtn = document.createElement('button');
+                humanBtn.setAttribute('id', 'human');
+                humanBtn.classList.add('game-button');
+                humanBtn.textContent = 'Play Vs Human';
+                humanBtn.addEventListener('click', _chooseMode);
+                mainContainer.appendChild(humanBtn);
                 
+                const aiBtn = document.createElement('button');
+                aiBtn.setAttribute('id', 'ai');
+                aiBtn.classList.add('game-button');
+                aiBtn.textContent = 'Play Vs Ai';
+                aiBtn.addEventListener('click', _chooseMode);
+                mainContainer.appendChild(aiBtn);
+        }    
+        const _humanInputs = () => { // - Input fields for player object names
                 mainContainer.textContent = '';
-                ticTacToe.playGame.startGameHuman(nameInput1Value, nameInput2Value);
-            }); 
+                
+                const nameContainer = document.createElement('div');
+                nameContainer.classList.add('name-container');
+                const nameInput1 = document.createElement('input');
+                nameInput1.setAttribute('type', 'text');
+                nameInput1.setAttribute('placeholder', 'X Player Name');
+                const nameInput2 = document.createElement('input');
+                nameInput2.setAttribute('type', 'text');
+                nameInput2.setAttribute('placeholder', 'O Player Name');
+                const startBtn = document.createElement('button');
+                startBtn.classList.add('game-button');
+                startBtn.textContent = 'Play Game!';
+                mainContainer.appendChild(nameContainer);
+                nameContainer.appendChild(nameInput1);
+                nameContainer.appendChild(nameInput2);
+                nameContainer.appendChild(startBtn);
+
+                startBtn.addEventListener('click', () => {
+                    const nameInput1Value = nameInput1.value;
+                    const nameInput2Value = nameInput2.value;
+                    
+                    mainContainer.textContent = '';
+                    playGame.startGameHuman(nameInput1Value, nameInput2Value);
+                }); 
+            }
+        
+        const _chooseMode = (e) => { // conditional for game mode choice
+            gameMode = e.target.id;
+            gameMode === 'human' ? _humanInputs(): console.log('');
         }
-    
-    const chooseMode = (e) => {
-        gameMode = e.target.id;
-    }
-    
-    window.onload = () => {
-        let gameMode = null;
-        initIntro();
-        gameMode === 'human' ? humanInputs(): console.log('');
         
-       
-        // TODO:
-        // - Greeting
-        // - Add Buttons for Human or AI
-        // - When turn changes display name
-        // - *Check win mechanics* 
-        // - Display winner
-        // - Ask to play again
+        window.onload = () => { // on load
+            let gameMode = null;
+            initIntro();
+        }
 
-        // - (maybe) Create AI mechanics
-        
+        return {
+            initIntro
+        }
+    })();
+})();  
 
-    }
-})();
-
-
+// TODO:
+// - Display winner
+// - Ask to play again
+// - (maybe) Create AI mechanics
