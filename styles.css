@@ -1,11 +1,8 @@
 :root {
     --primary-background: #949b9e;
     --secondary-background: #e2ebf0;
-    --primary-button: rgb(244, 242, 233);
-    --primary-button-border:rgb(56, 33, 16);
+    --primary-button-border: #98a5ac;;
     --primary-text: #4c5257;
-    --secondary-text: #00635D;
-
     --board-border: 15px solid var(--primary-text);
 }
 
@@ -166,7 +163,7 @@ button:hover {
 }
 
 .winner-text {
-
+    font-size: 100px;
 }
 
 .footer {
